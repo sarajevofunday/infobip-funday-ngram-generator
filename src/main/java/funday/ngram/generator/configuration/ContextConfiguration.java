@@ -1,14 +1,13 @@
 package funday.ngram.generator.configuration;
 
 import com.mongodb.Mongo;
+import funday.ngram.generator.data.service.TrigramDataService;
+import funday.ngram.generator.data.service.internal.TrigramDataServiceImpl;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.Properties;
-
-import funday.ngram.generator.data.service.TrigramDataService;
-import funday.ngram.generator.data.service.internal.TrigramDataServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;

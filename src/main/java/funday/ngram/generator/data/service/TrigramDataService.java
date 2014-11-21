@@ -8,4 +8,5 @@ import funday.ngram.generator.data.model.Trigram;
 public interface TrigramDataService {
     Trigram getRandom();
     Trigram get(String firstKey, String secondKey);
+    void save(Trigram trigram);
 }

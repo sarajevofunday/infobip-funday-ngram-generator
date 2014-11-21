@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.Properties;
+
+import funday.ngram.generator.data.service.TrigramDataService;
+import funday.ngram.generator.data.service.internal.TrigramDataServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
@@ -18,24 +21,6 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 @Configuration
 public class ContextConfiguration {
 
-	public static final String HOST = "localhost";
-	public static final int PORT = 12345;
-	public static final String DATABASE_NAME = "dbName";
-
-	@Bean
-	public MongoDbFactory getMongo() {
-		try {
-			return new SimpleMongoDbFactory(new Mongo(HOST, PORT), DATABASE_NAME);
-		} catch (UnknownHostException e) {
-			return null; //edit
-		}
-	}
-
-	@Bean
-	public MongoTemplate getMongoTemplate() {
-		return new MongoTemplate(getMongo());
-	}
-
 	@Bean
 	public Properties properties() throws FileNotFoundException, IOException {
 		Properties properties = new Properties();
@@ -44,5 +29,34 @@ public class ContextConfiguration {
 		InputStream stream = classLoader.getResourceAsStream("app.properties");
 		properties.load(stream);
 		return properties;
+	}
+
+	@Bean
+	public MongoDbFactory mongo() {
+		try {
+			Properties properties = properties();
+			String host = properties.getProperty("mongodb.host");
+			int port = Integer.parseInt(properties.getProperty("mongodb.port"));
+			String dbName = properties.getProperty("mongodb.database");
+			return new SimpleMongoDbFactory(new Mongo(host, port), dbName);
+		} catch (UnknownHostException e) {
+			return null; //edit
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null; //edit
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null; //edit
+		}
+	}
+
+	@Bean
+	public MongoTemplate mongoTemplate() {
+		return new MongoTemplate(mongo());
+	}
+
+	@Bean
+	public TrigramDataService trigramDataService() {
+		return new TrigramDataServiceImpl(mongoTemplate());
 	}
 }

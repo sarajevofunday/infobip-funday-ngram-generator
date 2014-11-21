@@ -41,16 +41,19 @@ class ApiService {
 	public void init() throws IOException {		
 		get("/", (request, response) -> {
 			Map<String, Object> attributes = new HashMap<>(1);
-			attributes.put("message", getText());
-
 			// The hello.ftl file is located in directory:
 			// src/test/resources/spark/template/freemarker
 			return new ModelAndView(attributes, "index.ftl");
 
 		}, freeMarkerEngine);
+
+		get("/getText/:wordCount", (request, response) -> {
+			String wordCount = request.params(":wordCount");
+			return getText(Integer.parseInt(wordCount));
+		});
 	}
 
-	private String getText() {
-		return "Generated Text";
+	private String getText(int wordCount) {
+		return "Generated Text" + wordCount;
 	}
 }

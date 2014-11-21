@@ -8,17 +8,32 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.Properties;
+import funday.ngram.generator.NgramTextGenerator;
+import funday.ngram.generator.TrigramTextGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.util.Log4jConfigurer;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Created by mobradovic on 11/21/14.
  */
 @Configuration
 public class ContextConfiguration {
+
+	@PostConstruct
+	public void log4jInitialize() {
+		try {
+			String log4jFile = System.getProperty("log4j.config");
+			Log4jConfigurer.initLogging(log4jFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Bean
 	public Properties properties() throws FileNotFoundException, IOException {
@@ -57,5 +72,10 @@ public class ContextConfiguration {
 	@Bean
 	public TrigramDataService trigramDataService() {
 		return new TrigramDataServiceImpl(mongoTemplate());
+	}
+
+	@Bean
+	public NgramTextGenerator trigramTextGenerator() {
+		return new TrigramTextGenerator(trigramDataService());
 	}
 }

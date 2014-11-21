@@ -50,4 +50,31 @@ public class Trigram {
     public void setValues(List<String> values) {
         this.values = values;
     }
+
+    @Override
+    public String toString() {
+        return "Trigram{" +
+                "id='" + id + '\'' +
+                ", firstKey='" + firstKey + '\'' +
+                ", secondKey='" + secondKey + '\'' +
+                ", values=" + values +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Trigram trigram = (Trigram) o;
+
+        if (!id.equals(trigram.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
